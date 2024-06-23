@@ -9,7 +9,7 @@ if (isset($_GET['order_id'])) {
     $query_ref = "SELECT rf.ref_no
           FROM tbl_order o
           INNER JOIN ref_no rf ON o.ref_no = rf.ref_id
-          WHERE o.id = 12";
+          WHERE o.id = $order_id";
 
     $result_ref = mysqli_query($conn, $query_ref);
 
@@ -115,20 +115,20 @@ if (isset($_GET['order_id'])) {
 
                 <div class="order-details">
                     <?php
-                    if ($result) {
+                    if ($result_ref) {
                         // Fetch row as an associative array
-                        $row = mysqli_fetch_assoc($result);
+                        $row_receipt = mysqli_fetch_assoc($result_ref);
 
-                        if ($row) {
+                        if ($row_receipt) {
                             ?>
-                            <strong>Reference#:</strong> <?= $row['ref_no']; ?> <br>
+                            <strong>Reference#:</strong> <?= $row_receipt['ref_no']; ?> <br>
                             <?php
 
                         } else {
                             echo "No results found.";
                         }
-                        // Free result set
-                        mysqli_free_result($result);
+                        // Free$result_ref set
+                        mysqli_free_result($result_ref);
                     } else {
                         echo "Error executing query: " . mysqli_error($conn);
                     }

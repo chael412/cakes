@@ -127,11 +127,11 @@ if (isset($_POST['order_checkout'])) {
                     <h4>Mrs. G</h4>
                     <div class="order-details">
                         <?php
-                        if ($refno_run) {
+                        if ($refno_run && mysqli_num_rows($refno_run) > 0) {
                             $row = mysqli_fetch_assoc($refno_run);
                             $ref_no_value = $row['ref_no'];
                             ?>
-                            <strong>Reference#:</strong> <?= $ref_no_value ?> <br>
+                            <strong>Reference#:</strong> <?= htmlspecialchars($ref_no_value) ?> <br>
                             <?php
                         }
                         ?>

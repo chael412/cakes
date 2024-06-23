@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2024 at 06:31 AM
+-- Generation Time: Jun 23, 2024 at 11:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,14 +37,12 @@ CREATE TABLE `ref_no` (
 --
 
 INSERT INTO `ref_no` (`ref_id`, `ref_no`) VALUES
-(1, 'mrsg-Tsyan4xn8T'),
-(2, 'mrsg-cxb08iDQNn'),
-(3, 'mrsg-UvCsLP2WgL'),
-(4, 'mrsg-tpUADGHzEh'),
-(5, 'mrsg-dyrqzXwlxY'),
-(6, 'mrsg-QKAIXBxOsZ'),
-(7, 'mrsg-WYhijDVzqT'),
-(8, 'mrsg-n4UE1TNssy');
+(1, 'mrsg-uOEDKW6Xgb'),
+(2, 'mrsg-iU2W2P9wpc'),
+(4, 'mrsg-T6XyLmPZf7'),
+(5, 'mrsg-3vO3BGb9wz'),
+(6, 'mrsg-9Chno1gl2x'),
+(7, 'mrsg-u5PG7RMA5j');
 
 -- --------------------------------------------------------
 
@@ -90,11 +88,11 @@ CREATE TABLE `tbl_cake` (
 --
 
 INSERT INTO `tbl_cake` (`id`, `title`, `description`, `price`, `image_name`, `category_id`, `featured`, `active`, `quantity`) VALUES
-(1, 'Caramelo Mango 6RD', 'Delicious mango-flavored cake.', 369.00, '1.jpg', 1, 'Yes', 'Yes', 33),
-(2, 'Lush Ube Velvet 6RD', 'Velvety ube-flavored cake.', 369.00, '2.jpg', 1, 'No', 'Yes', 15),
+(1, 'Caramelo Mango 6RD', 'Delicious mango-flavored cake.', 369.00, '1.jpg', 1, 'Yes', 'Yes', 25),
+(2, 'Lush Ube Velvet 6RD', 'Velvety ube-flavored cake.', 369.00, '2.jpg', 1, 'No', 'Yes', 13),
 (3, 'Ube Grande 8RD', 'Rich and creamy ube cake.', 489.00, '3.jpg', 2, 'Yes', 'Yes', 13),
-(4, 'Vanilla Grande 8RD', 'Classic vanilla cake with almond.', 489.00, '4.jpg', 2, 'Yes', 'Yes', 55),
-(5, 'Choco Grande 8RD', 'Decadent chocolate cake.', 489.00, '5.jpg', 2, 'Yes', 'Yes', 22),
+(4, 'Vanilla Grande 8RD', 'Classic vanilla cake with almond.', 489.00, '4.jpg', 2, 'Yes', 'Yes', 42),
+(5, 'Choco Grande 8RD', 'Decadent chocolate cake.', 489.00, '5.jpg', 2, 'Yes', 'Yes', 19),
 (6, 'LUSH UBE VELVET 9RD', 'Delicious ube velvet cake.', 599.00, '6.jpg', 3, 'No', 'Yes', 22),
 (7, 'BANAMEL POUND 9RD', 'Moist pound cake.', 599.00, '7.jpg', 3, 'No', 'Yes', 9),
 (8, 'BUTTER VELVET 9RD', 'Velvety butter cake.', 599.00, '8.jpg', 3, 'No', 'Yes', 15),
@@ -127,6 +125,13 @@ CREATE TABLE `tbl_cart` (
   `qty` int(11) NOT NULL DEFAULT 1,
   `ref_no` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_cart`
+--
+
+INSERT INTO `tbl_cart` (`id`, `cake_id`, `quantity`, `price`, `created_at`, `u_id`, `qty`, `ref_no`) VALUES
+(25, 4, 0, 0.00, '2024-06-23 03:45:54', 11, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -179,22 +184,12 @@ CREATE TABLE `tbl_order` (
 --
 
 INSERT INTO `tbl_order` (`id`, `cake`, `price`, `qty`, `total`, `order_date`, `status`, `u_id`, `payment_method`, `delivery_option`, `gcash_no`, `ref_no`) VALUES
-(1, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 02:49:46', 'Ordered', 12, 'cash', 'pickup', '', 1),
-(2, 'WHITE FOREST 9RD', 599.00, 1, 599.00, '2024-06-22 02:49:46', 'Ordered', 12, 'cash', 'pickup', '', 1),
-(3, 'LUSH UBE VELVET 8X12', 699.00, 1, 699.00, '2024-06-22 02:51:39', 'Ordered', 12, 'cash', 'pickup', '', 2),
-(4, 'YUMMYLICIOUS CARAMEL 8X12', 699.00, 1, 699.00, '2024-06-22 02:51:39', 'Ordered', 12, 'cash', 'pickup', '', 2),
-(5, 'Caramelo Mango 6RD', 369.00, 2, 738.00, '2024-06-22 02:54:01', 'Ordered', 12, 'cash', 'pickup', '', 3),
-(6, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 03:01:26', 'Ordered', 12, 'gcash', 'pickup', NULL, 0),
-(7, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 03:02:19', 'Ordered', 11, 'gcash', 'pickup', NULL, 0),
-(8, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 03:03:30', 'Ordered', 11, 'gcash', 'pickup', NULL, 0),
-(9, 'Lush Ube Velvet 6RD', 369.00, 1, 369.00, '2024-06-22 03:06:55', 'Ordered', 11, 'gcash', 'pickup', NULL, 0),
-(10, 'Ube Grande 8RD', 489.00, 1, 489.00, '2024-06-22 03:11:05', 'Ordered', 11, 'gcash', 'pickup', NULL, 0),
-(11, 'Ube Grande 8RD', 489.00, 1, 489.00, '2024-06-22 03:12:35', 'Ordered', 11, 'cash', 'pickup', '', 4),
-(12, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 03:21:45', 'Ordered', 11, 'cash', 'pickup', '', 5),
-(13, 'Choco Grande 8RD', 489.00, 1, 489.00, '2024-06-22 04:14:31', 'Ordered', 11, 'gcash', 'pickup', '09991931710', 6),
-(14, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 04:14:52', 'Ordered', 11, 'cash', 'pickup', '', 7),
-(15, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 04:15:05', 'Ordered', 11, 'cash', 'pickup', '', 8),
-(16, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-22 04:24:11', 'Ordered', 11, 'gcash', 'pickup', '09991931710', 0);
+(1, 'Caramelo Mango 6RD', 369.00, 2, 738.00, '2024-06-23 03:39:08', 'On Delivery', 11, 'gcash', 'pickup', '09991931710', 1),
+(2, 'Vanilla Grande 8RD', 489.00, 3, 1467.00, '2024-06-23 03:39:08', 'On Delivery', 11, 'gcash', 'pickup', '09991931710', 1),
+(3, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-23 03:42:44', 'Ordered', 11, 'gcash', 'pickup', '09991931710', 2),
+(11, 'Vanilla Grande 8RD', 489.00, 3, 1467.00, '2024-06-23 03:59:22', 'Ordered', 12, 'cod', 'pickup', '', 4),
+(12, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-23 08:43:05', 'Ordered', 12, 'gcash', 'pickup', '09991931710', 5),
+(13, 'Caramelo Mango 6RD', 369.00, 1, 369.00, '2024-06-23 09:43:32', 'Ordered', 12, 'cod', 'pickup', '', 7);
 
 -- --------------------------------------------------------
 
@@ -280,7 +275,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `ref_no`
 --
 ALTER TABLE `ref_no`
-  MODIFY `ref_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ref_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_admin`
@@ -298,13 +293,13 @@ ALTER TABLE `tbl_cake`
 -- AUTO_INCREMENT for table `tbl_cart`
 --
 ALTER TABLE `tbl_cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `tbl_order`
 --
 ALTER TABLE `tbl_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`

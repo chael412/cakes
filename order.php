@@ -152,62 +152,84 @@ $customer_address = $userDetails['customer_address'];
             $total = $price * $qty; // total = price x qty 
             $status = "Ordered";  // Ordered, On Delivery, Delivered, Cancelled
             $u_id = $_SESSION["u_id"];
-
-
             $gcash_no = ($payment_method == 'gcash') ? '09991931710' : '';
 
-            // Save the order in the database
-            // Save the order in the database
-            $sql2 = "INSERT INTO tbl_order (cake, price, qty, total, status, u_id, payment_method, delivery_option, gcash_no)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt = mysqli_prepare($conn, $sql2);
+            function generateReferenceNumber($prefix, $length)
+            {
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < $length; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+                return $prefix . $randomString;
+            }
 
-            // Update quantity in tbl_cake
-            $update_cake_query = "UPDATE tbl_cake SET quantity = quantity - ? WHERE id = ?";
-            $update_stmt = mysqli_prepare($conn, $update_cake_query);
+            $referenceNumber = generateReferenceNumber('mrsg-', 10);
 
-            if ($stmt && $update_stmt) {
-                mysqli_stmt_bind_param($stmt, "sidisssss", $cake, $price, $qty, $total, $status, $u_id, $payment_method, $delivery_option, $gcash_no);
-                mysqli_stmt_bind_param($update_stmt, "ii", $qty, $cakeId);
+            $query_ref = "INSERT INTO ref_no(ref_no) VALUES('$referenceNumber')";
+            $ref_run = mysqli_query($conn, $query_ref);
 
-                if (mysqli_stmt_execute($stmt)) {
-                    // Get the generated order_id
-                    $order_id = mysqli_insert_id($conn);
+            if ($ref_run) {
+                $last_ref_id = mysqli_insert_id($conn);
 
-                    // Execute update cake query
-                    mysqli_stmt_execute($update_stmt);
+                $sql2 = "INSERT INTO tbl_order (cake, price, qty, total, status, u_id, payment_method, delivery_option, gcash_no, ref_no)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+                $stmt = mysqli_prepare($conn, $sql2);
 
-                    // Check if the query executed successfully
-                    if (mysqli_stmt_affected_rows($stmt) > 0 && mysqli_stmt_affected_rows($update_stmt) > 0) {
-                        // Query executed and order saved
-                        ?>
-                        <script>
-                            alert("Cake Ordered Successfully.");
-                            window.location.href = 'order_receipts.php?order_id=<?php echo $order_id; ?>'; 
-                        </script>
-                        <?php
-                        exit();
+                // Update quantity in tbl_cake
+                $update_cake_query = "UPDATE tbl_cake SET quantity = quantity - ? WHERE id = ?";
+                $update_stmt = mysqli_prepare($conn, $update_cake_query);
+
+                if ($stmt && $update_stmt) {
+                    mysqli_stmt_bind_param($stmt, "sidisssssi", $cake, $price, $qty, $total, $status, $u_id, $payment_method, $delivery_option, $gcash_no, $last_ref_id);
+                    mysqli_stmt_bind_param($update_stmt, "ii", $qty, $cakeId);
+
+                    if (mysqli_stmt_execute($stmt)) {
+                        // Get the generated order_id
+                        $order_id = mysqli_insert_id($conn);
+
+                        // Execute update cake query
+                        mysqli_stmt_execute($update_stmt);
+
+                        // Check if the query executed successfully
+                        if (mysqli_stmt_affected_rows($stmt) > 0 && mysqli_stmt_affected_rows($update_stmt) > 0) {
+                            // Query executed and order saved
+                            ?>
+                            <script>
+                                alert("Cake Ordered Successfully.");
+                                window.location.href = 'order_receipts.php?order_id=<?php echo $order_id; ?>'; 
+                            </script>
+                            <?php
+                            exit();
+                        } else {
+                            // Failed to save order or update cake quantity
+                            $_SESSION['order'] = "<div class='error text-center'>Failed to Order Cake or Update Quantity.</div>";
+                            header('location:' . SITEURL);
+                            exit();
+                        }
                     } else {
-                        // Failed to save order or update cake quantity
-                        $_SESSION['order'] = "<div class='error text-center'>Failed to Order Cake or Update Quantity.</div>";
+                        // Execution failed
+                        $_SESSION['order'] = "<div class='error text-center'>" . mysqli_error($conn) . "</div>"; // Get MySQL error message
                         header('location:' . SITEURL);
                         exit();
                     }
+
+
                 } else {
-                    // Execution failed
-                    $_SESSION['order'] = "<div class='error text-center'>" . mysqli_error($conn) . "</div>"; // Get MySQL error message
+                    // Error in prepared statement
+                    $_SESSION['order'] = "<div class='error text-center'>Failed to prepare statement.</div>";
                     header('location:' . SITEURL);
                     exit();
                 }
 
-                mysqli_stmt_close($stmt);
-                mysqli_stmt_close($update_stmt);
             } else {
-                // Error in prepared statement
-                $_SESSION['order'] = "<div class='error text-center'>Failed to prepare statement.</div>";
-                header('location:' . SITEURL);
-                exit();
+                echo "error inserting reference no.";
             }
+
+
+
+
 
 
         }
